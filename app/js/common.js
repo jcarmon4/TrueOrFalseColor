@@ -42,7 +42,7 @@ function startGame() {
 		if (time == 360) {
 			time = 0;
 			clearInterval(timerId);
-			endGame();
+			failAnswer();
 		}; time = time+3;
 	}, 20);
 
@@ -127,7 +127,101 @@ function newGame() {
 		}
 		if (time == 360) {
 			clearInterval(timerId);
-			endGame();
+			failAnswer();
+			$ppc.removeClass('gt-50');
+		}; time = time+3;
+	}, 20);
+
+	$(document).keydown(function(e) {
+		if(e.which == 37) {
+			if(statusPoint == 0) {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			} else {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			}
+		}
+
+		if(e.which == 39) {
+			if(statusPoint == 1) {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			} else {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			}
+		}
+	});
+
+	$trueButton.click(function() {
+		if(statusPoint == 0) {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		} else {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		}
+	});
+
+	$falseButton.click(function() {
+		if(statusPoint == 1) {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		} else {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		}
+	});
+}
+
+function failAnswer() {
+	time = 0;
+	$ppc.removeClass('gt-50');
+	point--;
+	$('.point').html(point);
+	limit = limit*0.99;
+	// console.log(limit);
+	// console.log('point ' + point);
+	randomColorNumber = randomColor.integer(0,4);
+	if(randomColorNumber < 2) {
+		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber + 2);
+	} else {
+		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber - 2);
+	}
+
+	if(randomColorTextNumber == randomColorNumber) {
+		statusPoint = 0;
+	} else {
+		statusPoint = 1;
+	}
+
+	$('.pcc-percents-wrapper').html('<span class="color">' + arrayColorText[randomColorTextNumber] + '</span>');
+	$('.color').css('color', arrayColor[randomColorNumber]);
+	$('.addColor').html('<style>.progress-pie-chart.gt-50{background-color:' + arrayColor[randomColorNumber] + ';}.ppc-progress .ppc-progress-fill{background:' + arrayColor[randomColorNumber] + ';position: absolute;border-radius: 50%;left: calc(50% - 130px);top: calc(50% - 130px);width: 260px;height: 260px;clip: rect(0, 130px, 260px, 0);transform: rotate(0deg);}</style>');
+
+	if(randomColorTextNumber == randomColorNumber) {
+		statusPoint = 0;
+	} else {
+		statusPoint = 1;
+	}
+
+	var timerId = setInterval(function() {
+		$('.ppc-progress-fill').css('transform','rotate('+ time +'deg)');
+		if (time > 180) {
+			$ppc.addClass('gt-50');
+		}
+		if (time == 360) {
+			clearInterval(timerId);
+			failAnswer();
 			$ppc.removeClass('gt-50');
 		}; time = time+3;
 	}, 20);
@@ -221,7 +315,7 @@ function trueAnswer() {
 		}
 		if (time == 360) {
 			clearInterval(timerId);
-			endGame();
+			failAnswer();
 			$ppc.removeClass('gt-50');
 		}; time = time+3;
 	}, 20);
@@ -299,16 +393,16 @@ $(document).keydown(function(e) {
 				trueAnswer();
 				time = 0;
 			} else {
-				endGame();
-				$ppc.removeClass('gt-50');
+				failAnswer();
+				time = 0;
 			}
 		} if(e.which == 39) {
 				if(statusPoint == 1) {
 					trueAnswer();
 					time = 0;
 				} else {
-					endGame();
-					$ppc.removeClass('gt-50');
+					failAnswer();
+					time = 0;
 				}
 			}
 		}
@@ -326,8 +420,8 @@ $trueButton.click(function() {
 		trueAnswer();
 		time = 0;
 	} else {
-		endGame();
-		$ppc.removeClass('gt-50');
+		failAnswer();
+		time = 0;
 	}
 });
 
@@ -336,8 +430,8 @@ $falseButton.click(function() {
 		trueAnswer();
 		time = 0;
 	} else {
-		endGame();
-		$ppc.removeClass('gt-50');
+		failAnswer();
+		time = 0;
 	}
 });
 
