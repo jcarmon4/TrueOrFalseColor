@@ -1,5 +1,5 @@
 var arrayColor = ['#E00000', '#FFD801', '#2E9AFE', '#04B431', '#FFA500'];
-var arrayColorText = ['Red', 'Yellow', 'Blue', 'Green', 'Orange'];
+var arrayColorText = ['Rojo', 'Amarillo', 'Azul', 'Verde', 'Naranja'];
 
 var randomColor = new Random();
 var randomColorText = new Random();
