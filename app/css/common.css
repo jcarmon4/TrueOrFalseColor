@@ -3,9 +3,41 @@ body {
   padding-bottom: 20px;
 }
 
+.btn-blue {
+  background-color: blue
+}
+
+.btn-green {
+  background-color: green
+}
+
+.btn-yellow {
+  background-color: yellow
+}
+
+.btn-orange {
+  background-color: orange
+}
+
+.btn-purple {
+  background-color: purple
+}
+
+.btn-red {
+  background-color: red
+}
+
 .point {
   position: absolute;
   right: 0;
+  font-size: 36px;
+  padding: 0 15px;
+  color: #777;
+}
+
+.time {
+  position: absolute;
+  left: 0;
   font-size: 36px;
   padding: 0 15px;
   color: #777;

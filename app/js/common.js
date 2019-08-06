@@ -1,18 +1,21 @@
-var arrayColor = ['#E00000', '#FFD801', '#2E9AFE', '#04B431', '#FFA500'];
-var arrayColorText = ['Rojo', 'Amarillo', 'Azul', 'Verde', 'Naranja'];
+var arrayColor = ['#2E9AFE', '#04B431', '#E00000'];
+var arrayColorText = ['Azul', 'Verde', 'Rojo'];
 
-var randomColor = new Random();
-var randomColorText = new Random();
-var randomColorNumber = randomColor.integer(0,4);
-if(randomColorNumber < 3) {
-	var randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber + 2);
-} else {
-	var randomColorTextNumber = randomColorText.integer(randomColorNumber - 2,randomColorNumber);
+var randomColorNumber = 0;//getRndInteger();
+var randomColorTextNumber = 0;//getRndInteger();
+
+function getRndInteger() {
+	var min = 0;
+	var max = 3;
+	return Math.floor(Math.random() * (max - min)) + min;
 }
+
 var $ppc = $('.progress-pie-chart');
+var $blueButton = $('.btn-blue');
+var $greenButton = $('.btn-green');
+var $redButton = $('.btn-red');
 var $trueButton = $('.btn-success');
 var $falseButton = $('.btn-danger');
-var $tryButton = $('.btn-warning');
 var $startButton = $('.btn-primary');
 var limit = 20, keyNew = 0, deg = 0, time = 0, point = 0;
 $('.game-over').hide();
@@ -21,9 +24,37 @@ $(document).ready(function() {
 	$('.load').remove();
 });
 
+$startButton.click(function() {
+	startGame();
+	$blueButton.show();
+	$greenButton.show();
+	$redButton.show();
+	$trueButton.show();
+	$falseButton.show();
+	$('.point').show();
+	$('.time').show();
+});
+
+var timerId = 0;
+function resetTimerId(){
+	timerId = setInterval(function() {
+		$('.ppc-progress-fill').css('transform','rotate('+ time +'deg)');
+		if (time > 180) {
+			$ppc.addClass('gt-50');
+		}
+		if (time == 360) {
+			time = 0;
+			clearInterval(timerId);
+			failAnswer();
+		}; time = time+3;
+	}, 20);
+}
+
 function startGame() {
+	console.log('startGame');
 	$('.welcome').remove();
 	$('.point').html(point);
+	$('.time').html(randomColorNumber);
 	$('.pcc-percents-wrapper').html('<span class="color">' + arrayColorText[randomColorTextNumber] + '</span>');
 	$('.color').css('color', arrayColor[randomColorNumber]);
 	$('.addColor').html('<style>.progress-pie-chart.gt-50{background-color:' + arrayColor[randomColorNumber] + ';}.ppc-progress .ppc-progress-fill{background:' + arrayColor[randomColorNumber] + ';position: absolute;border-radius: 50%;left: calc(50% - 130px);top: calc(50% - 130px);width: 260px;height: 260px;clip: rect(0, 130px, 260px, 0);transform: rotate(0deg);}</style>');
@@ -34,17 +65,7 @@ function startGame() {
 		statusPoint = 1;
 	}
 
-	var timerId = setInterval(function() {
-		$('.ppc-progress-fill').css('transform','rotate('+ time +'deg)');
-		if (time > 180) {
-			$ppc.addClass('gt-50');
-		}
-		if (time == 360) {
-			time = 0;
-			clearInterval(timerId);
-			failAnswer();
-		}; time = time+3;
-	}, 20);
+	resetTimerId();
 
 	$(document).keydown(function(e) {
 		if(e.which == 37) {
@@ -97,91 +118,7 @@ function startGame() {
 	});
 }
 
-function newGame() {
-	time = 0;
-	limit = 22;
-	point = 0;
-	$('.point').html(point);
-	$ppc.removeClass('gt-50');
-	$('.game-over').hide();
-	var randomColorNumber = randomColor.integer(0,4);
-	if(randomColorNumber < 3) {
-		var randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber + 2);
-	} else {
-		var randomColorTextNumber = randomColorText.integer(randomColorNumber - 2,randomColorNumber);
-	}
-	$('.pcc-percents-wrapper').html('<span class="color">' + arrayColorText[randomColorTextNumber] + '</span>');
-	$('.color').css('color', arrayColor[randomColorNumber]);
-	$('.addColor').html('<style>.progress-pie-chart.gt-50{background-color:' + arrayColor[randomColorNumber] + ';}.ppc-progress .ppc-progress-fill{background:' + arrayColor[randomColorNumber] + ';position: absolute;border-radius: 50%;left: calc(50% - 130px);top: calc(50% - 130px);width: 260px;height: 260px;clip: rect(0, 130px, 260px, 0);transform: rotate(0deg);}</style>');
 
-	if(randomColorTextNumber == randomColorNumber) {
-		statusPoint = 0;
-	} else {
-		statusPoint = 1;
-	}
-
-	var timerId = setInterval(function() {
-		$('.ppc-progress-fill').css('transform','rotate('+ time +'deg)');
-		if (time > 180) {
-			$ppc.addClass('gt-50');
-		}
-		if (time == 360) {
-			clearInterval(timerId);
-			failAnswer();
-			$ppc.removeClass('gt-50');
-		}; time = time+3;
-	}, 20);
-
-	$(document).keydown(function(e) {
-		if(e.which == 37) {
-			if(statusPoint == 0) {
-				clearInterval(timerId);
-				time = 0;
-				$ppc.removeClass('gt-50');
-			} else {
-				clearInterval(timerId);
-				time = 0;
-				$ppc.removeClass('gt-50');
-			}
-		}
-
-		if(e.which == 39) {
-			if(statusPoint == 1) {
-				clearInterval(timerId);
-				time = 0;
-				$ppc.removeClass('gt-50');
-			} else {
-				clearInterval(timerId);
-				time = 0;
-				$ppc.removeClass('gt-50');
-			}
-		}
-	});
-
-	$trueButton.click(function() {
-		if(statusPoint == 0) {
-			clearInterval(timerId);
-			time = 0;
-			$ppc.removeClass('gt-50');
-		} else {
-			clearInterval(timerId);
-			time = 0;
-			$ppc.removeClass('gt-50');
-		}
-	});
-
-	$falseButton.click(function() {
-		if(statusPoint == 1) {
-			clearInterval(timerId);
-			time = 0;
-			$ppc.removeClass('gt-50');
-		} else {
-			clearInterval(timerId);
-			time = 0;
-			$ppc.removeClass('gt-50');
-		}
-	});
-}
 
 function failAnswer() {
 	time = 0;
@@ -191,12 +128,8 @@ function failAnswer() {
 	limit = limit*0.99;
 	// console.log(limit);
 	// console.log('point ' + point);
-	randomColorNumber = randomColor.integer(0,4);
-	if(randomColorNumber < 2) {
-		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber + 2);
-	} else {
-		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber - 2);
-	}
+	randomColorNumber = getRndInteger();
+	randomColorTextNumber = getRndInteger();
 
 	if(randomColorTextNumber == randomColorNumber) {
 		statusPoint = 0;
@@ -285,12 +218,8 @@ function trueAnswer() {
 	limit = limit*0.99;
 	// console.log(limit);
 	// console.log('point ' + point);
-	randomColorNumber = randomColor.integer(0,4);
-	if(randomColorNumber < 2) {
-		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber + 2);
-	} else {
-		randomColorTextNumber = randomColorText.integer(randomColorNumber,randomColorNumber - 2);
-	}
+	randomColorNumber = getRndInteger();
+	randomColorTextNumber = getRndInteger();
 
 	if(randomColorTextNumber == randomColorNumber) {
 		statusPoint = 0;
@@ -408,11 +337,48 @@ $(document).keydown(function(e) {
 		}
 });
 
-$startButton.click(function() {
-	startGame();
-	$trueButton.show();
-	$falseButton.show();
-	$('.point').show();
+function redraw(){
+	$('.point').html(point);
+	$('.time').html(time);
+	clearInterval(timerId);
+	resetTimerId();
+	time = 0;
+	$ppc.removeClass('gt-50');
+	randomColorNumber = getRndInteger();
+	randomColorTextNumber = getRndInteger();
+	$('.pcc-percents-wrapper').html('<span class="color">' + arrayColorText[randomColorTextNumber] + '</span>');
+	$('.color').css('color', arrayColor[randomColorNumber]);
+	$('.addColor').html('<style>.progress-pie-chart.gt-50{background-color:' + arrayColor[randomColorNumber] + ';}.ppc-progress .ppc-progress-fill{background:' + arrayColor[randomColorNumber] + ';position: absolute;border-radius: 50%;left: calc(50% - 130px);top: calc(50% - 130px);width: 260px;height: 260px;clip: rect(0, 130px, 260px, 0);transform: rotate(0deg);}</style>');
+}
+
+$blueButton.click(function() {
+	console.log('blueButton');
+	if (randomColorNumber == 0){
+		point++;
+	} else {
+		point--;
+	}
+	redraw();
+});
+
+$greenButton.click(function() {
+	console.log('greenButton');
+	if (randomColorNumber == 1){
+		point++;
+	} else {
+		point--;
+	}
+	redraw();
+});
+
+$redButton.click(function() {
+	console.log('redButton');
+	if (randomColorNumber == 2){
+		point++;
+	} else {
+		point--;
+	}
+	redraw();
 });
 
 $trueButton.click(function() {
@@ -435,6 +401,91 @@ $falseButton.click(function() {
 	}
 });
 
+/*
+var $tryButton = $('.btn-warning');
+
 $tryButton.click(function() {
 	newGame();
 });
+
+function newGame() {
+	time = 0;
+	limit = 22;
+	point = 0;
+	$('.point').html(point);
+	$ppc.removeClass('gt-50');
+	$('.game-over').hide();
+	randomColorNumber = getRndInteger();
+	randomColorTextNumber = getRndInteger();
+	$('.pcc-percents-wrapper').html('<span class="color">' + arrayColorText[randomColorTextNumber] + '</span>');
+	$('.color').css('color', arrayColor[randomColorNumber]);
+	$('.addColor').html('<style>.progress-pie-chart.gt-50{background-color:' + arrayColor[randomColorNumber] + ';}.ppc-progress .ppc-progress-fill{background:' + arrayColor[randomColorNumber] + ';position: absolute;border-radius: 50%;left: calc(50% - 130px);top: calc(50% - 130px);width: 260px;height: 260px;clip: rect(0, 130px, 260px, 0);transform: rotate(0deg);}</style>');
+
+	if(randomColorTextNumber == randomColorNumber) {
+		statusPoint = 0;
+	} else {
+		statusPoint = 1;
+	}
+
+	var timerId = setInterval(function() {
+		$('.ppc-progress-fill').css('transform','rotate('+ time +'deg)');
+		if (time > 180) {
+			$ppc.addClass('gt-50');
+		}
+		if (time == 360) {
+			clearInterval(timerId);
+			failAnswer();
+			$ppc.removeClass('gt-50');
+		}; time = time+3;
+	}, 20);
+
+	$(document).keydown(function(e) {
+		if(e.which == 37) {
+			if(statusPoint == 0) {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			} else {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			}
+		}
+
+		if(e.which == 39) {
+			if(statusPoint == 1) {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			} else {
+				clearInterval(timerId);
+				time = 0;
+				$ppc.removeClass('gt-50');
+			}
+		}
+	});
+
+	$trueButton.click(function() {
+		if(statusPoint == 0) {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		} else {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		}
+	});
+
+	$falseButton.click(function() {
+		if(statusPoint == 1) {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		} else {
+			clearInterval(timerId);
+			time = 0;
+			$ppc.removeClass('gt-50');
+		}
+	});
+}*/
